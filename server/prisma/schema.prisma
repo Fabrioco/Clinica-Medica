@@ -1,0 +1,139 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        Int      @id @default(autoincrement())
+  name      String
+  email     String   @unique
+  password  String
+  role      Role     @default(patient)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  patient       Patient?
+  doctor        Doctor?
+  notifications Notification[]
+
+  @@map("users")
+}
+
+model Patient {
+  id         Int      @id @default(autoincrement())
+  user       User     @relation(fields: [userId], references: [id])
+  userId     Int      @unique
+  cpf        String   @unique
+  birthDate  DateTime
+  phone      String
+  address    String
+  healthPlan String?
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  appointments Appointment[]
+  exams        Exam[]
+  payments     Payment[]
+}
+
+model Doctor {
+  id        Int      @id @default(autoincrement())
+  user      User     @relation(fields: [userId], references: [id])
+  userId    Int      @unique
+  crm       String   @unique
+  specialty String
+  phone     String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  appointments Appointment[]
+}
+
+model Appointment {
+  id              Int               @id @default(autoincrement())
+  patient         Patient           @relation(fields: [patientId], references: [id])
+  patientId       Int
+  doctor          Doctor            @relation(fields: [doctorId], references: [id])
+  doctorId        Int
+  appointmentDate DateTime
+  status          AppointmentStatus @default(scheduled)
+  notes           String?
+  createdAt       DateTime          @default(now())
+  updatedAt       DateTime          @updatedAt
+
+  exams   Exam[]
+  payment Payment?
+}
+
+model Exam {
+  id            Int         @id @default(autoincrement())
+  appointment   Appointment @relation(fields: [appointmentId], references: [id])
+  appointmentId Int
+  patient       Patient     @relation(fields: [patientId], references: [id])
+  patientId     Int
+  name          String
+  resultFile    String?
+  resultDate    DateTime
+  createdAt     DateTime    @default(now())
+  updatedAt     DateTime    @updatedAt
+}
+
+model Payment {
+  id            Int           @id @default(autoincrement())
+  patient       Patient       @relation(fields: [patientId], references: [id])
+  patientId     Int
+  appointment   Appointment   @relation(fields: [appointmentId], references: [id])
+  appointmentId Int           @unique
+  amount        Float
+  paymentMethod PaymentMethod
+  status        PaymentStatus @default(pending)
+  paidAt        DateTime?
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
+}
+
+model Notification {
+  id        Int      @id @default(autoincrement())
+  user      User     @relation(fields: [userId], references: [id])
+  userId    Int
+  title     String
+  message   String
+  read      Boolean  @default(false)
+  sendAt    DateTime
+  createdAt DateTime @default(now())
+}
+
+enum Role {
+  admin
+  doctor
+  receptionist
+  patient
+}
+
+enum AppointmentStatus {
+  scheduled
+  completed
+  canceled
+}
+
+enum PaymentMethod {
+  cash
+  card
+  insurance
+}
+
+enum PaymentStatus {
+  paid
+  pending
+  canceled
+}
