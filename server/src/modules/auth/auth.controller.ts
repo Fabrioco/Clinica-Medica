@@ -1,16 +1,29 @@
-import { Body, Controller, Post } from '@nestjs/common';
+import {
+  Body,
+  ConflictException,
+  Controller,
+  Get,
+  Post,
+  Req,
+  UseGuards,
+} from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { RegisterRequestDto, RegisterResponseDto } from './dto/register.dto';
 import {
   ApiBadRequestResponse,
+  ApiBearerAuth,
   ApiBody,
   ApiConflictResponse,
   ApiCreatedResponse,
   ApiInternalServerErrorResponse,
   ApiOperation,
+  ApiResponse,
   ApiTags,
 } from '@nestjs/swagger';
 import { LoginRequestDto, LoginResponseDto } from './dto/login.dto';
+import { UserDto } from './dto/user.dto';
+import type { Request } from 'express';
+import { AuthGuard } from 'src/commons/guards/auth.guard';
 
 @Controller('auth')
 @ApiTags('User - Authentication')
@@ -51,5 +64,22 @@ export class AuthController {
   @ApiInternalServerErrorResponse({ description: 'Internal server error' })
   async login(@Body() loginDto: LoginRequestDto) {
     return await this.service.login(loginDto);
+  }
+
+  @Get('me')
+  @UseGuards(AuthGuard)
+  @ApiBearerAuth()
+  @ApiOperation({ summary: 'Get the current user' })
+  @ApiResponse({
+    description: 'The current user',
+    type: UserDto,
+  })
+  @ApiBadRequestResponse({ description: 'Bad request' })
+  @ApiInternalServerErrorResponse({ description: 'Internal server error' })
+  async me(@Req() req: Request) {
+    if (!req?.user) {
+      throw new ConflictException('User not found');
+    }
+    return await this.service.me(req?.user.id);
   }
 }

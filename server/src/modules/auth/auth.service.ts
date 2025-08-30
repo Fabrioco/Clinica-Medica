@@ -61,6 +61,15 @@ export class AuthService {
     };
   }
 
+  async me(userId: number) {
+    const user = await this.prisma.user.findUnique({
+      where: {
+        id: userId,
+      },
+    });
+    return user;
+  }
+
   private async findUserByEmail(email: string) {
     return await this.prisma.user.findUnique({
       where: {
