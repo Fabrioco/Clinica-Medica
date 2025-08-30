@@ -1,6 +1,11 @@
 import { JwtService } from '@nestjs/jwt';
 import { PrismaService } from '../database/prisma.service';
-import { ConflictException, Injectable } from '@nestjs/common';
+import {
+  BadRequestException,
+  ConflictException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { RegisterRequestDto } from './dto/register.dto';
 import bcrypt from 'bcrypt';
 import { User } from '@prisma/client';
@@ -77,19 +82,64 @@ export class AuthService {
     }
 
     const code = Math.floor(100000 + Math.random() * 900000);
+    const expiresAt = new Date(Date.now() + 10 * 60 * 1000).toLocaleString(
+      'pt-BR',
+      { timeZone: 'America/Sao_Paulo' },
+    );
+
     await this.prisma.user.update({
       where: {
         id: user.id,
       },
       data: {
         code,
-        expiresAt: new Date(Date.now() + 600000),
+        expiresAt: new Date(Date.now() + 10 * 60 * 1000),
       },
     });
     console.log('Código para desenvolvimento:', code);
     return {
-      code,
-      expiresAt: `Seu código expira em ${new Date(Date.now() + 600000).toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit', second: '2-digit' })}`,
+      message: 'Your code will expire in 10 minutes',
+      expiresAt,
+    };
+  }
+
+  async resetPassword(
+    email: string,
+    code: number,
+    password: string,
+    confirmPassword: string,
+  ) {
+    if (password !== confirmPassword) {
+      throw new BadRequestException('Passwords do not match');
+    }
+
+    const user = await this.findUserByEmail(email);
+    if (!user) {
+      throw new NotFoundException('User not found');
+    }
+
+    if (user.code !== code) {
+      throw new BadRequestException('Code invalid');
+    }
+
+    if (!user.expiresAt || user.expiresAt < new Date()) {
+      throw new BadRequestException('Code expired');
+    }
+
+    password = this.hashPassword(password);
+
+    await this.prisma.user.update({
+      where: {
+        id: user.id,
+      },
+      data: {
+        password,
+        code: null,
+        expiresAt: null,
+      },
+    });
+    return {
+      message: 'Password reset successfully',
     };
   }
 
