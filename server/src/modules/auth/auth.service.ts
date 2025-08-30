@@ -70,6 +70,29 @@ export class AuthService {
     return user;
   }
 
+  async forgotPassword(email: string) {
+    const user = await this.findUserByEmail(email);
+    if (!user) {
+      throw new ConflictException('User not found');
+    }
+
+    const code = Math.floor(100000 + Math.random() * 900000);
+    await this.prisma.user.update({
+      where: {
+        id: user.id,
+      },
+      data: {
+        code,
+        expiresAt: new Date(Date.now() + 600000),
+      },
+    });
+    console.log('Código para desenvolvimento:', code);
+    return {
+      code,
+      expiresAt: `Seu código expira em ${new Date(Date.now() + 600000).toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit', second: '2-digit' })}`,
+    };
+  }
+
   private async findUserByEmail(email: string) {
     return await this.prisma.user.findUnique({
       where: {

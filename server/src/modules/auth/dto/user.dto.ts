@@ -28,4 +28,16 @@ export class UserDto {
 
   @ApiProperty({ enum: Role, description: 'The role of the user' })
   role: string;
+
+  @ApiProperty({
+    example: 3124,
+    description: 'Code for reset password',
+  })
+  code?: number;
+
+  @ApiProperty({
+    example: '2023-05-01T12:00:00.000Z',
+    description: 'Date for reset password',
+  })
+  expiresAt?: Date;
 }
