@@ -4,6 +4,7 @@ import { ConflictException, Injectable } from '@nestjs/common';
 import { RegisterRequestDto } from './dto/register.dto';
 import bcrypt from 'bcrypt';
 import { User } from '@prisma/client';
+import { LoginRequestDto } from './dto/login.dto';
 
 @Injectable()
 export class AuthService {
@@ -21,6 +22,30 @@ export class AuthService {
     registerDto.password = this.hashPassword(registerDto.password);
 
     const user: User = await this.createUser(registerDto);
+
+    const token = this.createToken(user);
+    return {
+      token,
+      user: {
+        id: user.id,
+        name: user.name,
+        email: user.email,
+        createdAt: user.createdAt,
+        updatedAt: user.updatedAt,
+        role: user.role,
+      },
+    };
+  }
+
+  async login(loginDto: LoginRequestDto) {
+    const user = await this.findUserByEmail(loginDto.email);
+    if (!user) {
+      throw new ConflictException('Credentials invalid');
+    }
+
+    if (!bcrypt.compareSync(loginDto.password, user.password)) {
+      throw new ConflictException('Credentials invalid');
+    }
 
     const token = this.createToken(user);
     return {

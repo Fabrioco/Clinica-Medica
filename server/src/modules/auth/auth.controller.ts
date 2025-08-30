@@ -10,6 +10,7 @@ import {
   ApiOperation,
   ApiTags,
 } from '@nestjs/swagger';
+import { LoginRequestDto, LoginResponseDto } from './dto/login.dto';
 
 @Controller('auth')
 @ApiTags('User - Authentication')
@@ -32,5 +33,23 @@ export class AuthController {
   @ApiInternalServerErrorResponse({ description: 'Internal server error' })
   async register(@Body() registerDto: RegisterRequestDto) {
     return await this.service.register(registerDto);
+  }
+
+  @Post('login')
+  @ApiOperation({ summary: 'Login a user' })
+  @ApiBody({
+    type: LoginRequestDto,
+    description: 'User login data',
+    required: true,
+  })
+  @ApiCreatedResponse({
+    description: 'User logged in successfully',
+    type: LoginResponseDto,
+  })
+  @ApiBadRequestResponse({ description: 'Bad request' })
+  @ApiConflictResponse({ description: 'Credentials invalid' })
+  @ApiInternalServerErrorResponse({ description: 'Internal server error' })
+  async login(@Body() loginDto: LoginRequestDto) {
+    return await this.service.login(loginDto);
   }
 }
