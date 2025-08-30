@@ -6,6 +6,7 @@ export function setupSwagger(app: INestApplication) {
     .setTitle('Clinica')
     .setDescription('The Clinica API description')
     .setVersion('1.0')
+    .addBearerAuth()
     .build();
 
   const document = SwaggerModule.createDocument(app, config);
