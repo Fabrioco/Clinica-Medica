@@ -60,8 +60,12 @@ export class PatientController {
 
   @Patch(':id')
   @ApiParam({ name: 'id', type: Number, description: 'Patient ID' })
-  @ApiBody({ type: PatientDto })
-  @ApiOperation({ summary: 'Update a patient' })
+  @ApiBody({ type: UpdatePatientDto })
+  @ApiOperation({
+    summary: 'Update a patient',
+    description:
+      'To update a patient, you do not need to pass the all items, only the ones that need to be updated.',
+  })
   @ApiOkResponse({ type: PatientDto })
   @ApiBadRequestResponse({ description: 'Bad request' })
   @ApiInternalServerErrorResponse({ description: 'Internal server error' })
