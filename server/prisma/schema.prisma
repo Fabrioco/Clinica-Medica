@@ -1,9 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -24,8 +18,9 @@ model User {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  patient       Patient?
-  doctor        Doctor?
+  patient   Patient?
+  doctor    Doctor?
+
   notifications Notification[]
 
   @@map("users")
@@ -33,8 +28,8 @@ model User {
 
 model Patient {
   id         Int      @id @default(autoincrement())
-  user       User     @relation(fields: [userId], references: [id])
   userId     Int      @unique
+  user       User     @relation(fields: [userId], references: [id])
   cpf        String   @unique
   birthDate  DateTime
   phone      String
@@ -50,8 +45,8 @@ model Patient {
 
 model Doctor {
   id        Int      @id @default(autoincrement())
-  user      User     @relation(fields: [userId], references: [id])
   userId    Int      @unique
+  user      User     @relation(fields: [userId], references: [id])
   crm       String   @unique
   specialty String
   phone     String
@@ -63,10 +58,10 @@ model Doctor {
 
 model Appointment {
   id              Int               @id @default(autoincrement())
-  patient         Patient           @relation(fields: [patientId], references: [id])
   patientId       Int
-  doctor          Doctor            @relation(fields: [doctorId], references: [id])
+  patient         Patient           @relation(fields: [patientId], references: [id])
   doctorId        Int
+  doctor          Doctor            @relation(fields: [doctorId], references: [id])
   appointmentDate DateTime
   status          AppointmentStatus @default(scheduled)
   notes           String?
@@ -79,10 +74,10 @@ model Appointment {
 
 model Exam {
   id            Int         @id @default(autoincrement())
-  appointment   Appointment @relation(fields: [appointmentId], references: [id])
   appointmentId Int
-  patient       Patient     @relation(fields: [patientId], references: [id])
+  appointment   Appointment @relation(fields: [appointmentId], references: [id])
   patientId     Int
+  patient       Patient     @relation(fields: [patientId], references: [id])
   name          String
   resultFile    String?
   resultDate    DateTime
@@ -92,10 +87,10 @@ model Exam {
 
 model Payment {
   id            Int           @id @default(autoincrement())
-  patient       Patient       @relation(fields: [patientId], references: [id])
   patientId     Int
-  appointment   Appointment   @relation(fields: [appointmentId], references: [id])
+  patient       Patient       @relation(fields: [patientId], references: [id])
   appointmentId Int           @unique
+  appointment   Appointment   @relation(fields: [appointmentId], references: [id])
   amount        Float
   paymentMethod PaymentMethod
   status        PaymentStatus @default(pending)
@@ -106,8 +101,8 @@ model Payment {
 
 model Notification {
   id        Int      @id @default(autoincrement())
-  user      User     @relation(fields: [userId], references: [id])
   userId    Int
+  user      User     @relation(fields: [userId], references: [id])
   title     String
   message   String
   read      Boolean  @default(false)
