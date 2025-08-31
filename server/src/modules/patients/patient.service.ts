@@ -22,11 +22,17 @@ export class PatientService {
       include: { user: { omit: { password: true } } },
     });
   }
-  async create(data: CreatePatientDto) {
-    await this.verifyUserExists(data.userId);
-    await this.existingPatient(data.userId);
-    return this.prisma.patient.create({ data });
+  async create(data: CreatePatientDto, userId: number) {
+    await this.verifyUserExists(userId);
+    await this.existingPatient(userId);
+    return this.prisma.patient.create({
+      data: {
+        userId,
+        ...data,
+      },
+    });
   }
+
   async update(id: number, data: UpdatePatientDto) {
     await this.verifyPatientExists(id);
     return this.prisma.patient.update({ where: { id }, data });
@@ -38,6 +44,14 @@ export class PatientService {
     return this.prisma.patient.delete({ where: { id } });
   }
 
+  async findPatientById(id: number) {
+    await this.verifyPatientExists(id);
+    return this.prisma.patient.findUnique({
+      where: { id },
+      include: { user: { omit: { password: true } } },
+    });
+  }
+
   private async verifyUserExists(id: number) {
     const user = await this.prisma.user.findUnique({ where: { id } });
     if (!user) {
@@ -46,7 +60,10 @@ export class PatientService {
   }
 
   private async verifyPatientExists(id: number) {
-    const patient = await this.prisma.patient.findUnique({ where: { id } });
+    const patient = await this.prisma.patient.findUnique({
+      where: { id },
+      include: { user: { omit: { password: true } } },
+    });
     if (!patient) {
       throw new ConflictException('Patient not found');
     }
