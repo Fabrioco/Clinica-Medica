@@ -2,12 +2,6 @@ import { ApiProperty } from '@nestjs/swagger';
 
 export class CreatePatientDto {
   @ApiProperty({
-    example: 1,
-    description: 'Id do usuário',
-  })
-  userId: number;
-
-  @ApiProperty({
     example: '123.456.789-00',
     description: 'CPF do paciente',
     uniqueItems: true,
