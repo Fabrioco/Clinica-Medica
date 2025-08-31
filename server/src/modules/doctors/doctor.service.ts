@@ -6,6 +6,7 @@ import {
 import { PrismaService } from '../database/prisma.service';
 import { CreateDoctorDto } from './dto/create-doctor.dto';
 import { UpdateDoctorDto } from './dto/update-doctor.dto';
+import { Role } from '@prisma/client';
 
 @Injectable()
 export class DoctorsService {
@@ -29,6 +30,7 @@ export class DoctorsService {
 
   async create(data: CreateDoctorDto, id: number) {
     await this.verifyCRMExists(data.crm);
+    await this.updateRoleToDoctor(id);
     return this.prisma.doctor.create({
       data: {
         userId: id,
@@ -84,5 +86,12 @@ export class DoctorsService {
     if (existing) {
       throw new ConflictException('Exists a doctor with this CRM');
     }
+  }
+
+  private async updateRoleToDoctor(id: number) {
+    return this.prisma.user.update({
+      where: { id },
+      data: { role: Role.doctor },
+    });
   }
 }
