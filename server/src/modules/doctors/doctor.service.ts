@@ -55,6 +55,17 @@ export class DoctorsService {
     return this.prisma.doctor.delete({ where: { userId: doctorId } });
   }
 
+  async findDoctorById(id: number) {
+    const doctor = await this.prisma.doctor.findUnique({ where: { id } });
+    if (!doctor) {
+      throw new NotFoundException('Doctor not found');
+    }
+    return this.prisma.doctor.findUnique({
+      where: { id },
+      include: { user: { omit: { password: true } } },
+    });
+  }
+
   private async verifyDoctorExists(id: number) {
     const doctor = await this.prisma.doctor.findUnique({
       where: { userId: id },

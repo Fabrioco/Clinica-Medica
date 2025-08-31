@@ -14,6 +14,7 @@ import {
   Controller,
   Delete,
   Get,
+  Param,
   Patch,
   Post,
   Req,
@@ -50,6 +51,15 @@ export class DoctorsController {
   @Get('me')
   findById(@Req() req: AuthRequest) {
     return this.service.findById(req.user.id);
+  }
+
+  @ApiOperation({ summary: 'Find doctor by id' })
+  @ApiOkResponse({ description: 'Doctor found', type: DoctorDto })
+  @ApiNotFoundResponse({ description: 'Doctor not found' })
+  @ApiInternalServerErrorResponse({ description: 'Internal server error' })
+  @Get(':doctorId')
+  findDoctorById(@Param('doctorId') id: string) {
+    return this.service.findDoctorById(Number(id));
   }
 
   @ApiOperation({ summary: 'Create a doctor' })
