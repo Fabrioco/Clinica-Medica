@@ -54,6 +54,7 @@ export class DoctorsService {
 
   async remove(doctorId: number) {
     await this.verifyDoctorExists(doctorId);
+    await this.updateRoleToPatient(doctorId);
     return this.prisma.doctor.delete({ where: { userId: doctorId } });
   }
 
@@ -92,6 +93,13 @@ export class DoctorsService {
     return this.prisma.user.update({
       where: { id },
       data: { role: Role.doctor },
+    });
+  }
+
+  private async updateRoleToPatient(id: number) {
+    return this.prisma.user.update({
+      where: { id },
+      data: { role: Role.patient },
     });
   }
 }
