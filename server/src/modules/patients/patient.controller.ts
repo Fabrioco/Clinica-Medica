@@ -24,15 +24,19 @@ import {
 import { CreatePatientDto } from './dto/create-patient.dto';
 import { UpdatePatientDto } from './dto/update-patient.dto';
 import { AuthGuard } from 'src/commons/guards/auth.guard';
+import { RolesGuard } from 'src/commons/guards/role.guard';
+import { Roles } from 'src/commons/decorators/role.decorator';
+import { Role } from '@prisma/client';
 
 @Controller('patients')
 @ApiTags('Patient')
-@UseGuards(AuthGuard)
+@UseGuards(AuthGuard, RolesGuard)
 @ApiBearerAuth()
 export class PatientController {
   constructor(private readonly service: PatientService) {}
 
   @Get()
+  @Roles(Role.admin)
   @ApiOperation({ summary: 'Get all patients' })
   @ApiOkResponse({ type: [PatientDto] })
   @ApiBadRequestResponse({ description: 'Bad request' })
