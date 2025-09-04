@@ -54,6 +54,7 @@ model Doctor {
   updatedAt DateTime @updatedAt
 
   appointments Appointment[]
+  exam Exam[]
 }
 
 model Appointment {
@@ -78,6 +79,8 @@ model Exam {
   appointment   Appointment @relation(fields: [appointmentId], references: [id])
   patientId     Int
   patient       Patient     @relation(fields: [patientId], references: [id])
+  doctorId      Int 
+  doctor        Doctor      @relation(fields: [doctorId], references: [id])
   name          String
   resultFile    String?
   resultDate    DateTime

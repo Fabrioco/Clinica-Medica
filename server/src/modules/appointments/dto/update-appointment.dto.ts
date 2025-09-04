@@ -1,14 +1,18 @@
-import { ApiProperty } from '@nestjs/swagger';
+import { ApiProperty, PartialType } from '@nestjs/swagger';
+import { IsDate, IsEnum, IsOptional, IsString } from 'class-validator';
 import { AppointmentStatus } from '@prisma/client';
+import { CreateAppointmentDto } from './create-appointment.dto';
 
-export class UpdateAppointmentDto {
+export class UpdateAppointmentDto extends PartialType(CreateAppointmentDto) {
   @ApiProperty({
     example: AppointmentStatus.scheduled,
     description: 'Status da consulta',
     enum: AppointmentStatus,
     required: false,
   })
-  status: AppointmentStatus;
+  @IsEnum(AppointmentStatus)
+  @IsOptional()
+  status?: AppointmentStatus;
 
   @ApiProperty({
     example: 'Observações sobre a consulta',
@@ -16,6 +20,8 @@ export class UpdateAppointmentDto {
     description: 'Observações sobre a consulta',
     type: String,
   })
+  @IsString()
+  @IsOptional()
   notes?: string;
 
   @ApiProperty({
@@ -23,5 +29,7 @@ export class UpdateAppointmentDto {
     required: false,
     description: 'Data e hora da consulta',
   })
+  @IsDate()
+  @IsOptional()
   appointmentDate?: Date;
 }
