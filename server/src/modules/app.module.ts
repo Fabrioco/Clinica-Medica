@@ -4,6 +4,7 @@ import { JwtModule } from '@nestjs/jwt';
 import { PatientModule } from './patients/patient.module';
 import { DoctorsModule } from './doctors/doctor.module';
 import { AppointmentsModule } from './appointments/appointments.module';
+import { ExamModule } from './exams/exam.module';
 
 @Module({
   imports: [
@@ -11,6 +12,7 @@ import { AppointmentsModule } from './appointments/appointments.module';
     PatientModule,
     DoctorsModule,
     AppointmentsModule,
+    ExamModule,
     JwtModule.registerAsync({
       useFactory: () => ({
         secret: process.env.JWT_SECRET,
