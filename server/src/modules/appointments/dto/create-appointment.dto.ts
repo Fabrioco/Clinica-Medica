@@ -1,3 +1,4 @@
+import { IsDate, IsNumber, IsOptional, IsString } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 
 export class CreateAppointmentDto {
@@ -6,6 +7,7 @@ export class CreateAppointmentDto {
     description: 'Id do paciente',
     required: true,
   })
+  @IsNumber()
   patientId: number;
 
   @ApiProperty({
@@ -13,6 +15,7 @@ export class CreateAppointmentDto {
     description: 'Id do médico',
     required: true,
   })
+  @IsNumber()
   doctorId: number;
 
   @ApiProperty({
@@ -20,6 +23,7 @@ export class CreateAppointmentDto {
     description: 'Data e hora da consulta',
     required: true,
   })
+  @IsDate()
   appointmentDate: Date;
 
   @ApiProperty({
@@ -28,5 +32,7 @@ export class CreateAppointmentDto {
     description: 'Observações sobre a consulta',
     type: String,
   })
+  @IsOptional()
+  @IsString()
   notes?: string;
 }
