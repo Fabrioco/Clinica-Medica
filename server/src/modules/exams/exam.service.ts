@@ -19,9 +19,9 @@ export class ExamService {
     return exam;
   }
 
-  async create(data: CreateExamDto, userId: number) {
+  async create(data: CreateExamDto) {
     await this.verifyPatientExists(data.patientId);
-    await this.verifyDoctorExists(userId);
+    await this.verifyDoctorExists(data.doctorId);
     await this.verifyAppointmentExists(data.appointmentId);
     return await this.prisma.exam.create({ data });
   }
@@ -66,7 +66,9 @@ export class ExamService {
   }
 
   private async verifyDoctorExists(id: number) {
-    const doctor = await this.prisma.doctor.findUnique({ where: { id } });
+    const doctor = await this.prisma.doctor.findUnique({
+      where: { id },
+    });
     if (!doctor) {
       throw new NotFoundException('Doctor not found');
     }

@@ -60,8 +60,8 @@ export class ExamController {
   @ApiInternalServerErrorResponse({ description: 'Internal server error' })
   @ApiBody({ type: CreateExamDto })
   @Post()
-  create(@Body() data: CreateExamDto, @Req() req: AuthRequest) {
-    return this.service.create(data, req.user.id);
+  create(@Body() data: CreateExamDto) {
+    return this.service.create(data);
   }
 
   @ApiOperation({ summary: 'Update an exam' })
