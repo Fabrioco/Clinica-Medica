@@ -8,6 +8,11 @@ async function bootstrap() {
   app.setGlobalPrefix('api/v1');
   setupSwagger(app);
 
+  app.enableCors({
+    origin: true,
+    credentials: true,
+  });
+
   app.useGlobalPipes(
     new ValidationPipe({
       whitelist: true,
