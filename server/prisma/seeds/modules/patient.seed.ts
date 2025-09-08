@@ -9,7 +9,7 @@ export async function patientSeeds() {
     cpf: '123.456.789-00',
     healthPlan: 'Plano de Saúde',
     phone: '(11) 99999-9999',
-    userId: 1,
+    userId: 3,
     createdAt: new Date(),
     updatedAt: new Date(),
   };
