@@ -9,7 +9,6 @@ services:
     volumes:
       - ./client:/app
       - /app/node_modules
-    restart: always
 
   server:
     build:
@@ -21,7 +20,6 @@ services:
     volumes:
       - ./server:/app
       - /app/node_modules
-    restart: always
     env_file:
       - .env
     depends_on:
@@ -35,7 +33,6 @@ services:
       - ${DB_PORT}:${DB_PORT}
     volumes:
       - dbdata:/var/lib/mysql
-    restart: always
     environment:
       MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
       MYSQL_DATABASE: ${MYSQL_DATABASE}
