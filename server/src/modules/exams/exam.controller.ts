@@ -26,8 +26,6 @@ import { CreateExamDto } from './dto/create-exam.dto';
 import { AuthGuard } from 'src/commons/guards/auth.guard';
 import type { AuthRequest } from 'src/@types/user-request.type';
 import { RolesGuard } from 'src/commons/guards/role.guard';
-import { Roles } from 'src/commons/decorators/role.decorator';
-import { Role } from '@prisma/client';
 
 @ApiTags('Exam')
 @ApiBearerAuth()
@@ -40,7 +38,6 @@ export class ExamController {
   @ApiOkResponse({ description: 'List of exams', type: [CreateExamDto] })
   @ApiInternalServerErrorResponse({ description: 'Internal server error' })
   @Get()
-  @Roles(Role.admin, Role.doctor)
   findAll() {
     return this.service.findAll();
   }
@@ -60,8 +57,8 @@ export class ExamController {
   @ApiInternalServerErrorResponse({ description: 'Internal server error' })
   @ApiBody({ type: CreateExamDto })
   @Post()
-  create(@Body() data: CreateExamDto, @Req() req: AuthRequest) {
-    return this.service.create(data, req.user.id);
+  create(@Body() data: CreateExamDto) {
+    return this.service.create(data);
   }
 
   @ApiOperation({ summary: 'Update an exam' })
