@@ -1,4 +1,4 @@
-import { doctorSeeds } from './modules/doctor.dto';
+import { doctorSeeds } from './modules/doctor.seed';
 import { patientSeeds } from './modules/patient.seed';
 import { usersSeeds } from './modules/users.seed';
 
