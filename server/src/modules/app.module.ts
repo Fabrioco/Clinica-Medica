@@ -5,6 +5,7 @@ import { PatientModule } from './patients/patient.module';
 import { DoctorsModule } from './doctors/doctor.module';
 import { AppointmentsModule } from './appointments/appointments.module';
 import { ExamModule } from './exams/exam.module';
+import { StripeModule } from './stripe/stripe.module';
 
 @Module({
   imports: [
@@ -13,6 +14,7 @@ import { ExamModule } from './exams/exam.module';
     DoctorsModule,
     AppointmentsModule,
     ExamModule,
+    StripeModule,
     JwtModule.registerAsync({
       useFactory: () => ({
         secret: process.env.JWT_SECRET,
