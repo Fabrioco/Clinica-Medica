@@ -6,10 +6,12 @@ import { DoctorsModule } from './doctors/doctor.module';
 import { AppointmentsModule } from './appointments/appointments.module';
 import { ExamModule } from './exams/exam.module';
 import { StripeModule } from './stripe/stripe.module';
+import { NoAuthModule } from './no-auth/no-auth.module';
 
 @Module({
   imports: [
     AuthModule,
+    NoAuthModule,
     PatientModule,
     DoctorsModule,
     AppointmentsModule,
