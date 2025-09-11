@@ -1,6 +1,6 @@
 import { IsString, IsDate, IsOptional, IsNumber } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
-import { UserDto } from 'src/modules/auth/dto/user.dto';
+import { UserDto } from '../../../modules/auth/dto/user.dto';
 
 export class PatientDto {
   @ApiProperty({
