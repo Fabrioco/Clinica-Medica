@@ -8,7 +8,7 @@ import { PrismaService } from '../database/prisma.service';
 import { RegisterRequestDto } from './dto/register.dto';
 import { LoginRequestDto } from './dto/login.dto';
 import { User } from '@prisma/client';
-import { PasswordHelperUtils } from 'src/utils/password.helper';
+import { PasswordHelperUtils } from '../../utils/password.helper';
 
 @Injectable()
 export class AuthService {
