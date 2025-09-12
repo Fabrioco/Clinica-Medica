@@ -1,4 +1,5 @@
 "use client";
+import Link from "next/link";
 import { useState } from "react";
 
 export default function AuthPage() {
@@ -32,15 +33,26 @@ export default function AuthPage() {
             <button className="w-full py-3 rounded-md bg-[#1f3a6d] text-white font-semibold hover:bg-[#16274a]">
               Entrar
             </button>
-            <p className="mt-6 text-sm">
-              Não tem conta?{" "}
-              <button
-                onClick={() => setIsLogin(false)}
-                className="text-[#1f3a6d] font-semibold hover:underline"
-              >
-                Registrar
-              </button>
-            </p>
+            <div className="mt-6 text-sm flex flex-row gap-4">
+              <p>
+                Esqueceu a senha?{" "}
+                <Link
+                  href={"/no-auth/forgot-password"}
+                  className="text-[#1f3a6d] font-semibold hover:underline"
+                >
+                  Clique aqui
+                </Link>
+              </p>
+              <p className="">
+                Não tem conta?{" "}
+                <button
+                  onClick={() => setIsLogin(false)}
+                  className="text-[#1f3a6d] font-semibold hover:underline"
+                >
+                  Registrar
+                </button>
+              </p>
+            </div>
           </div>
           <div className="w-1/2 bg-[#1f3a6d] flex-col justify-center items-center text-white p-12 hidden sm:flex">
             <h2 className="text-4xl font-bold mb-4">Bem-vindo de volta!</h2>
