@@ -23,7 +23,7 @@ import {
 import { LoginRequestDto, LoginResponseDto } from './dto/login.dto';
 import { UserDto } from './dto/user.dto';
 import type { Request } from 'express';
-import { AuthGuard } from 'src/commons/guards/auth.guard';
+import { AuthGuard } from '../../commons/guards/auth.guard';
 
 @Controller('auth')
 @ApiTags('User - Authentication')
