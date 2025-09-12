@@ -1,5 +1,6 @@
 services:
   client:
+    image: fabriciolopes1325/clinica_client:latest
     build:
       context: ./client
       dockerfile: Dockerfile
@@ -11,6 +12,7 @@ services:
       - /app/node_modules
 
   server:
+    image: fabriciolopes1325/clinica_server:latest
     build:
       context: ./server
       dockerfile: Dockerfile
