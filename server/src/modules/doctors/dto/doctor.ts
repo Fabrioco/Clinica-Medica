@@ -1,6 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsNumber, IsString, IsOptional } from 'class-validator';
-import { UserDto } from 'src/modules/auth/dto/user.dto';
+import { UserDto } from '../../../modules/auth/dto/user.dto';
 
 export class DoctorDto {
   @ApiProperty({
