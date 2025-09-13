@@ -24,6 +24,30 @@ const mockPatient = {
   },
 };
 
+const mockRequest: AuthRequest = {
+  user: {
+    id: 1,
+    email: 'teste@email.com',
+    name: 'Fabrício',
+    role: 'patient',
+  },
+} as AuthRequest;
+
+const createDto: CreatePatientDto = {
+  cpf: '123.456.789-00',
+  birthDate: new Date('1990-01-01'),
+  phone: '(11) 99999-9999',
+  address: 'Rua das Flores, 123',
+  healthPlan: 'SUS',
+};
+
+const updateDto: UpdatePatientDto = {
+  birthDate: new Date('1995-01-01'),
+  phone: '(11) 55555-5555',
+  address: 'Rua das Flores, 456',
+  healthPlan: 'SUS',
+};
+
 describe('PatientController', () => {
   let controller: PatientController; // instância do controller que vamos testar
   let service: PatientService; // instância do service mockado
@@ -91,86 +115,45 @@ describe('PatientController', () => {
 
   // Teste para criar um paciente
   it('deve criar um paciente', async () => {
-    const dto: CreatePatientDto = {
-      cpf: '123.456.789-00',
-      birthDate: new Date('1990-01-01'),
-      phone: '(11) 99999-9999',
-      address: 'Rua das Flores, 123',
-      healthPlan: 'SUS',
-    };
-
     // Mock do request que normalmente viria do Express, incluindo o usuário logado
-    const mockRequest: AuthRequest = {
-      user: {
-        id: 1,
-        email: 'teste@email.com',
-        name: 'Fabrício',
-        role: 'patient',
-      },
-    } as AuthRequest;
 
     // Chamamos o método create do controller com DTO e request mockado
-    const result = await controller.create(dto, mockRequest);
+    const result = await controller.create(createDto, mockRequest);
 
     // Verificamos se o retorno do controller bate com o paciente mockado + DTO
     expect(result).toEqual({
       ...mockPatient,
-      ...dto,
+      ...createDto,
     });
 
     // Verificamos se o service.create foi chamado com os argumentos corretos
     // Primeiro argumento: dto enviado
     // Segundo argumento: userId do usuário logado no request
     // eslint-disable-next-line @typescript-eslint/unbound-method
-    expect(service.create).toHaveBeenCalledWith(dto, mockRequest.user.id);
+    expect(service.create).toHaveBeenCalledWith(createDto, mockRequest.user.id);
   });
 
   // Teste para atualizar um paciente
   it('deve atualizar um paciente', async () => {
-    const dto: UpdatePatientDto = {
-      birthDate: new Date('1995-01-01'),
-      phone: '(11) 55555-5555',
-      address: 'Rua das Flores, 456',
-      healthPlan: 'SUS',
-    };
-
-    // Mock do request que normalmente viria do Express, incluindo o usuário logado
-    const mockRequest: AuthRequest = {
-      user: {
-        id: 1,
-        email: 'teste@email.com',
-        name: 'Fabrício',
-        role: 'patient',
-      },
-    } as AuthRequest;
-
     // Chamamos o método update do controller com DTO e request mockado
-    const result = await controller.update(mockRequest, dto);
+    const result = await controller.update(mockRequest, updateDto);
 
     // Verificamos se o retorno do controller bate com o paciente mockado + DTO
     expect(result).toEqual({
       ...mockPatient,
-      ...dto,
+      ...updateDto,
     });
 
     // Verificamos se o service.update foi chamado com os argumentos corretos
     // Primeiro argumento: id do paciente a ser atualizado
     // Segundo argumento: dto enviado
     // eslint-disable-next-line @typescript-eslint/unbound-method
-    expect(service.update).toHaveBeenCalledWith(mockPatient.id, dto);
+    expect(service.update).toHaveBeenCalledWith(mockPatient.id, updateDto);
   });
 
   // Teste para deletar um paciente
   it('deve deletar um paciente', async () => {
     // Mock do request que normalmente viria do Express, incluindo o usuário logado
-    const mockRequest: AuthRequest = {
-      user: {
-        id: 1,
-        email: 'teste@email.com',
-        name: 'Fabrício',
-        role: 'patient',
-      },
-    } as AuthRequest;
 
     // Chamamos o método remove do controller com request mockado
     await controller.remove(mockRequest);
@@ -183,16 +166,6 @@ describe('PatientController', () => {
 
   // Teste para buscar um paciente
   it('deve buscar um paciente', async () => {
-    // Mock do request que normalmente viria do Express, incluindo o usuário logado
-    const mockRequest: AuthRequest = {
-      user: {
-        id: 1,
-        email: 'teste@email.com',
-        name: 'Fabrício',
-        role: 'patient',
-      },
-    } as AuthRequest;
-
     // Chamamos o método findById do controller com request mockado
     const result = await controller.findById(mockRequest);
 
