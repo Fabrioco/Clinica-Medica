@@ -7,8 +7,8 @@ import {
   IsString,
 } from 'class-validator';
 import { AppointmentStatus } from '@prisma/client';
-import { DoctorDto } from 'src/modules/doctors/dto/doctor';
-import { PatientDto } from 'src/modules/patients/dto/patient.dto';
+import { DoctorDto } from '../../../modules/doctors/dto/doctor';
+import { PatientDto } from '../../../modules/patients/dto/patient.dto';
 
 export class AppointmentDto {
   @ApiProperty()

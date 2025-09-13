@@ -20,7 +20,7 @@ import {
   ApiTags,
 } from '@nestjs/swagger';
 import { AppointmentDto } from './dto/appointment.dto';
-import { AuthGuard } from 'src/commons/guards/auth.guard';
+import { AuthGuard } from '../../commons/guards/auth.guard';
 
 @Controller('appointments')
 @ApiTags('Appointment')
