@@ -2,7 +2,7 @@ import { Body, Controller, Post, UseGuards } from '@nestjs/common';
 import { ApiBearerAuth, ApiBody, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { StripeService } from './stripe.service';
 import { CreatePaymentIntentDto } from './dto/create-payment-intent.dto';
-import { AuthGuard } from 'src/commons/guards/auth.guard';
+import { AuthGuard } from '../../commons/guards/auth.guard';
 
 @Controller('Stripe')
 @UseGuards(AuthGuard)
