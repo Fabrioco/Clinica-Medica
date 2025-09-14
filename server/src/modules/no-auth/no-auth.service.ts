@@ -5,7 +5,7 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { PrismaService } from '../database/prisma.service';
-import { PasswordHelperUtils } from 'src/utils/password.helper';
+import { PasswordHelperUtils } from '../../utils/password.helper';
 
 @Injectable()
 export class NoAuthService {

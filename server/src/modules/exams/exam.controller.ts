@@ -23,9 +23,9 @@ import {
 } from '@nestjs/common';
 import { ExamService } from './exam.service';
 import { CreateExamDto } from './dto/create-exam.dto';
-import { AuthGuard } from 'src/commons/guards/auth.guard';
-import type { AuthRequest } from 'src/@types/user-request.type';
-import { RolesGuard } from 'src/commons/guards/role.guard';
+import { AuthGuard } from '../../commons/guards/auth.guard';
+import type { AuthRequest } from '../../@types/user-request.type';
+import { RolesGuard } from '../../commons/guards/role.guard';
 
 @ApiTags('Exam')
 @ApiBearerAuth()
