@@ -10,6 +10,9 @@ services:
     volumes:
       - ./client:/app
       - /app/node_modules
+    env_file:
+      - .env
+
 
   server:
     image: fabriciolopes1325/clinica_server:latest
@@ -18,7 +21,7 @@ services:
       dockerfile: Dockerfile
     container_name: clinica_server
     ports:
-      - ${PORT}:${PORT}
+      - ${SERVER_PORT}:${SERVER_PORT}
     volumes:
       - ./server:/app
       - /app/node_modules
