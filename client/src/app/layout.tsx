@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Montserrat } from "next/font/google";
 import "./globals.css";
+import { ToastContainer } from "react-toastify";
 
 const MontserratFont = Montserrat({
   subsets: ["latin"],
@@ -22,6 +23,7 @@ export default function RootLayout({
       <body
         className={`bg-background text-foreground ${MontserratFont.className} antialiased`}
       >
+        <ToastContainer autoClose={3000} />
         {children}
       </body>
     </html>

@@ -9,7 +9,8 @@ services:
     volumes:
       - ./client:/app
       - /app/node_modules
-    restart: always
+    env_file:
+      - .env
 
   server:
     build:
@@ -17,7 +18,7 @@ services:
       dockerfile: Dockerfile
     container_name: clinica_server
     ports:
-      - ${PORT}:${PORT}
+      - ${SERVER_PORT}:${SERVER_PORT}
     volumes:
       - ./server:/app
       - /app/node_modules
