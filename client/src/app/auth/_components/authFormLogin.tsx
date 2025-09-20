@@ -58,8 +58,8 @@ export const AuthFormLogin = ({
       <AuthButton
         text={isLoading ? "Entrando..." : "Entrar"}
         type="submit"
-        onClick={() => {}}
         isLink={false}
+        disabled={isLoading}
       />
 
       {errorMessage.length > 0 && (

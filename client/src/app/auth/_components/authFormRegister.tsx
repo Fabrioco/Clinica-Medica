@@ -77,8 +77,8 @@ export const AuthFormRegister = ({
       <AuthButton
         text={isLoading ? "Registrando..." : "Registrar"}
         type="submit"
-        onClick={() => {}}
         isLink={false}
+
       />
 
       {errorMessage.length > 0 && (
