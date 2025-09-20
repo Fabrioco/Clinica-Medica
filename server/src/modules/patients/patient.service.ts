@@ -18,7 +18,7 @@ export class PatientService {
   async findById(id: number) {
     await this.verifyPatientExists(id);
     return this.prisma.patient.findUnique({
-      where: { id },
+      where: { userId: id },
       include: { user: { omit: { password: true } } },
     });
   }
@@ -60,8 +60,9 @@ export class PatientService {
   }
 
   private async verifyPatientExists(id: number) {
+    console.log(id);
     const patient = await this.prisma.patient.findUnique({
-      where: { id },
+      where: { userId: id },
       include: { user: { omit: { password: true } } },
     });
     if (!patient) {

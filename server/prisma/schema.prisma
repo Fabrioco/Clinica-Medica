@@ -3,23 +3,23 @@ generator client {
 }
 
 datasource db {
-  provider = "mysql"
+  provider = "postgresql"
   url      = env("DATABASE_URL")
 }
 
 model User {
-  id        Int      @id @default(autoincrement())
+  id        Int       @id @default(autoincrement())
   name      String
-  email     String   @unique
+  email     String    @unique
   password  String
-  role      Role     @default(patient)
+  role      Role      @default(patient)
   code      Int?
   expiresAt DateTime?
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
 
-  patient   Patient?
-  doctor    Doctor?
+  patient Patient?
+  doctor  Doctor?
 
   notifications Notification[]
 
@@ -44,16 +44,18 @@ model Patient {
 }
 
 model Doctor {
-  id        Int      @id @default(autoincrement())
-  userId    Int      @unique
-  user      User     @relation(fields: [userId], references: [id])
-  crm       String   @unique
-  specialty String
-  phone     String
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id              Int      @id @default(autoincrement())
+  userId          Int      @unique
+  user            User     @relation(fields: [userId], references: [id])
+  crm             String   @unique
+  stripeAccountId String?
+  specialty       String
+  phone           String
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
 
   appointments Appointment[]
+  exam         Exam[]
 }
 
 model Appointment {
@@ -78,6 +80,8 @@ model Exam {
   appointment   Appointment @relation(fields: [appointmentId], references: [id])
   patientId     Int
   patient       Patient     @relation(fields: [patientId], references: [id])
+  doctorId      Int
+  doctor        Doctor      @relation(fields: [doctorId], references: [id])
   name          String
   resultFile    String?
   resultDate    DateTime
@@ -97,6 +101,10 @@ model Payment {
   paidAt        DateTime?
   createdAt     DateTime      @default(now())
   updatedAt     DateTime      @updatedAt
+
+  // Integração Stripe
+  stripePaymentIntentId String? // ID do pagamento no Stripe
+  stripeTransferId      String? // ID da transferência pro médico
 }
 
 model Notification {
