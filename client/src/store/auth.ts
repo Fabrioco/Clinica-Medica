@@ -59,6 +59,7 @@ export const useAuthStore = create<AuthStore>()(
           }
 
           set({ user: response.user, token: response.token });
+          localStorage.setItem("token", response.token);
           return { success: true };
         } catch (err) {
           const errMsg = ["Erro interno do servidor"];

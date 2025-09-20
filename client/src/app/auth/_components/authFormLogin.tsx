@@ -5,6 +5,7 @@ import { useState } from "react";
 import { toast } from "react-toastify";
 import { AuthButton } from "./authButton";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 export const AuthFormLogin = ({
   setIsLogin,
@@ -15,6 +16,8 @@ export const AuthFormLogin = ({
   const [emailLogin, setEmailLogin] = useState<string>("");
   const [passwordLogin, setPasswordLogin] = useState<string>("");
 
+  const { push } = useRouter();
+
   async function handleLogin(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     const result = await login(emailLogin, passwordLogin);
@@ -23,6 +26,7 @@ export const AuthFormLogin = ({
       result.error.forEach((msg: string) => toast.error(msg));
     } else {
       toast.success("Login efetuado com sucesso");
+      push("/dashboard");
     }
   }
 
