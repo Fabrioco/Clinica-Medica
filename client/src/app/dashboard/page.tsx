@@ -2,9 +2,9 @@ import Link from "next/link";
 
 export default function DashboardPage() {
   return (
-    <div className="container flex flex-col items-center justify-center bg-[#f5fafd] h-screen overflow-x-hidden">
-      <div className="flex flex-col items-center justify-center bg-white w-full md:w-11/12 p-6 rounded-lg shadow-lg">
-        <h1 className="text-3xl font-bold text-[#1f3a6d] text-left">
+    <div className="container flex flex-col items-center justify-center bg-[#f5fafd] py-2">
+      <div className="flex flex-col items-center justify-center bg-white w-full md:w-11/12 rounded-lg shadow-lg">
+        <h1 className="text-3xl font-bold text-[#1f3a6d] text-left pt-4">
           Dashboard
         </h1>
         <div className="flex flex-col gap-4 w-full p-2">
@@ -123,16 +123,6 @@ export default function DashboardPage() {
                   <span>Email</span>
                   <span>Paciente</span>
                 </div>
-
-                <div className="flex justify-between items-center w-full hover:bg-gray-100 px-4 py-2 rounded-md hover:shadow-md">
-                  <span>
-                    <Link href="/dashboard/1" className="text-[#1f3a6d]">
-                      Nome
-                    </Link>
-                  </span>
-                  <span>Email</span>
-                  <span>Paciente</span>
-                </div>
               </div>
             </div>
           </div>
@@ -141,3 +131,4 @@ export default function DashboardPage() {
     </div>
   );
 }
+
