@@ -3,3 +3,7 @@
 body {
   background-color: #f5fafd;
 }
+
+.inputGlobal {
+  @apply w-full mb-4 p-3 border border-gray-300 rounded-md;
+}
