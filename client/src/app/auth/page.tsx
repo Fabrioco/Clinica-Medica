@@ -1,9 +1,11 @@
 "use client";
 import Link from "next/link";
+
 import React, { useState } from "react";
 import { toast } from "react-toastify";
 import { ButtonAuth } from "./_components/button";
 import { useAuthStore } from "@/store/auth";
+
 
 export default function AuthPage() {
   const { login, register, isLoading, errorMessage } = useAuthStore();
@@ -83,6 +85,7 @@ export default function AuthPage() {
               onChange={(e) => setPasswordLogin(e.target.value)}
               value={passwordLogin}
             />
+
             <ButtonAuth
               text={isLoading ? "Entrando..." : "Entrar"}
               type="submit"
@@ -98,16 +101,20 @@ export default function AuthPage() {
               </p>
             )}
 
+
             <div className="mt-6 text-sm flex flex-row gap-4">
               <p>
                 Esqueceu a senha?{" "}
                 <Link
+
                   href="/no-auth/forgot-password"
+
                   className="text-[#1f3a6d] font-semibold hover:underline"
                 >
                   Clique aqui
                 </Link>
               </p>
+
               <p>
                 Não tem conta?{" "}
                 <ButtonAuth
@@ -121,6 +128,7 @@ export default function AuthPage() {
           </form>
 
           {/* Login Side Image/Text */}
+
           <div className="w-1/2 bg-[#1f3a6d] flex-col justify-center items-center text-white p-12 hidden sm:flex">
             <h2 className="text-4xl font-bold mb-4">Bem-vindo de volta!</h2>
             <p className="text-lg text-center">

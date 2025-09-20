@@ -1,68 +1,78 @@
 import { JwtService } from '@nestjs/jwt';
-import { PrismaService } from '../database/prisma.service';
 import {
-  BadRequestException,
   ConflictException,
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
+import { PrismaService } from '../database/prisma.service';
 import { RegisterRequestDto } from './dto/register.dto';
-import bcrypt from 'bcrypt';
-import { User } from '@prisma/client';
 import { LoginRequestDto } from './dto/login.dto';
+import { User } from '@prisma/client';
+import { PasswordHelperUtils } from '../../utils/password.helper';
 
 @Injectable()
 export class AuthService {
   constructor(
     private readonly prisma: PrismaService,
     private readonly jwtService: JwtService,
+    private readonly passwordHelper: PasswordHelperUtils,
   ) {}
 
   async register(registerDto: RegisterRequestDto) {
-    const verifyUser = await this.findUserByEmail(registerDto.email);
-    if (verifyUser) {
+    const user = await this.prisma.user.findUnique({
+      where: {
+        email: registerDto.email,
+      },
+    });
+
+    if (user) {
       throw new ConflictException('User already exists');
     }
 
-    registerDto.password = this.hashPassword(registerDto.password);
+    const hashedPassword = await this.passwordHelper.hashPassword(
+      registerDto.password,
+    );
 
-    const user: User = await this.createUser(registerDto);
+    const createdUser = await this.prisma.user.create({
+      data: {
+        ...registerDto,
+        password: hashedPassword,
+      },
+    });
 
-    const token = this.createToken(user);
+    const token = this.createToken(createdUser);
+
     return {
       token,
-      user: {
-        id: user.id,
-        name: user.name,
-        email: user.email,
-        createdAt: user.createdAt,
-        updatedAt: user.updatedAt,
-        role: user.role,
-      },
+      user: this.getUserResponse(createdUser),
     };
   }
 
   async login(loginDto: LoginRequestDto) {
-    const user = await this.findUserByEmail(loginDto.email);
+    const user = await this.prisma.user.findUnique({
+      where: {
+        email: loginDto.email,
+      },
+    });
+
     if (!user) {
       throw new ConflictException('Credentials invalid');
     }
 
-    if (!bcrypt.compareSync(loginDto.password, user.password)) {
+    const isPasswordValid = await this.passwordHelper.comparePassword(
+      loginDto.password,
+      user.password,
+    );
+
+    if (!isPasswordValid) {
       throw new ConflictException('Credentials invalid');
     }
 
     const token = this.createToken(user);
+
     return {
       token,
-      user: {
-        id: user.id,
-        name: user.name,
-        email: user.email,
-        createdAt: user.createdAt,
-        updatedAt: user.updatedAt,
-        role: user.role,
-      },
+      user: this.getUserResponse(user),
     };
   }
 
@@ -72,88 +82,12 @@ export class AuthService {
         id: userId,
       },
     });
-    return user;
-  }
 
-  async forgotPassword(email: string) {
-    const user = await this.findUserByEmail(email);
-    if (!user) {
-      throw new ConflictException('User not found');
-    }
-
-    const code = Math.floor(100000 + Math.random() * 900000);
-    const expiresAt = new Date(Date.now() + 10 * 60 * 1000).toLocaleString(
-      'pt-BR',
-      { timeZone: 'America/Sao_Paulo' },
-    );
-
-    await this.prisma.user.update({
-      where: {
-        id: user.id,
-      },
-      data: {
-        code,
-        expiresAt: new Date(Date.now() + 10 * 60 * 1000),
-      },
-    });
-    console.log('Código para desenvolvimento:', code);
-    return {
-      message: 'Your code will expire in 10 minutes',
-      expiresAt,
-    };
-  }
-
-  async resetPassword(
-    email: string,
-    code: number,
-    password: string,
-    confirmPassword: string,
-  ) {
-    if (password !== confirmPassword) {
-      throw new BadRequestException('Passwords do not match');
-    }
-
-    const user = await this.findUserByEmail(email);
     if (!user) {
       throw new NotFoundException('User not found');
     }
 
-    if (user.code !== code) {
-      throw new BadRequestException('Code invalid');
-    }
-
-    if (!user.expiresAt || user.expiresAt < new Date()) {
-      throw new BadRequestException('Code expired');
-    }
-
-    password = this.hashPassword(password);
-
-    await this.prisma.user.update({
-      where: {
-        id: user.id,
-      },
-      data: {
-        password,
-        code: null,
-        expiresAt: null,
-      },
-    });
-    return {
-      message: 'Password reset successfully',
-    };
-  }
-
-  private async findUserByEmail(email: string) {
-    return await this.prisma.user.findUnique({
-      where: {
-        email,
-      },
-    });
-  }
-
-  private hashPassword(password: string) {
-    const salt = bcrypt.genSaltSync();
-    return bcrypt.hashSync(password, salt);
+    return this.getUserResponse(user);
   }
 
   private createToken(user: User) {
@@ -170,13 +104,14 @@ export class AuthService {
     );
   }
 
-  private async createUser(registerDto: RegisterRequestDto) {
-    return await this.prisma.user.create({
-      data: {
-        name: registerDto.name,
-        email: registerDto.email,
-        password: registerDto.password,
-      },
-    });
+  private getUserResponse(user: User) {
+    return {
+      id: user.id,
+      name: user.name,
+      email: user.email,
+      createdAt: user.createdAt,
+      updatedAt: user.updatedAt,
+      role: user.role,
+    };
   }
 }

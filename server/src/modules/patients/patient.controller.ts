@@ -23,8 +23,8 @@ import {
 } from '@nestjs/swagger';
 import { CreatePatientDto } from './dto/create-patient.dto';
 import { UpdatePatientDto } from './dto/update-patient.dto';
-import { AuthGuard } from 'src/commons/guards/auth.guard';
-import type { AuthRequest } from 'src/@types/user-request.type';
+import { AuthGuard } from '../../commons/guards/auth.guard';
+import type { AuthRequest } from '../../@types/user-request.type';
 
 @Controller('patients')
 @ApiTags('Patient')

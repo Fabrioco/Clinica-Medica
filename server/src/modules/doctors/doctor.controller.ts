@@ -22,9 +22,10 @@ import {
 } from '@nestjs/common';
 import { DoctorsService } from './doctor.service';
 import { CreateDoctorDto } from './dto/create-doctor.dto';
-import { AuthGuard } from 'src/commons/guards/auth.guard';
+import { AuthGuard } from '../../commons/guards/auth.guard';
 import { DoctorDto } from './dto/doctor';
 import type { AuthRequest } from 'src/@types/user-request.type';
+import { UpdateDoctorDto } from './dto/update-doctor.dto';
 
 @ApiTags('Doctor')
 @ApiBearerAuth()
@@ -81,9 +82,9 @@ export class DoctorsController {
   @ApiNotFoundResponse({ description: 'Doctor not found' })
   @ApiBadRequestResponse({ description: 'Bad request' })
   @ApiInternalServerErrorResponse({ description: 'Internal server error' })
-  @ApiBody({ type: CreateDoctorDto })
+  @ApiBody({ type: UpdateDoctorDto })
   @Patch('me')
-  update(@Body() data: CreateDoctorDto, @Req() req: AuthRequest) {
+  update(@Body() data: UpdateDoctorDto, @Req() req: AuthRequest) {
     return this.service.update(data, req.user.id);
   }
 

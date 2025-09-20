@@ -1,11 +1,14 @@
 import { IsString, IsDate, IsOptional, IsNumber } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
-import { UserDto } from 'src/modules/auth/dto/user.dto';
+import { UserDto } from '../../../modules/auth/dto/user.dto';
+
 export class PatientDto {
   @ApiProperty({
     example: 1,
     description: 'Id do paciente',
   })
+  @IsNumber()
+  @IsOptional()
   id?: number;
 
   @ApiProperty({
@@ -49,7 +52,7 @@ export class PatientDto {
   })
   @IsOptional()
   @IsString()
-  healthPlan: string;
+  healthPlan?: string;
 
   @ApiProperty({
     example: '2023-05-01T12:00:00.000Z',
@@ -57,12 +60,13 @@ export class PatientDto {
   })
   @IsDate()
   @IsOptional()
-  createdAt: Date;
+  createdAt?: Date;
 
   @ApiProperty({
     example: '2023-05-01T12:00:00.000Z',
     description: 'Data de atualização do paciente',
   })
+  @IsDate()
   updatedAt: Date;
 
   @ApiProperty({
