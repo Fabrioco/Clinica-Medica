@@ -5,3 +5,8 @@ export const api = async (endpoint: string, options?: RequestInit) => {
   const data = await response.json();
   return data;
 };
+
+export const getAuthHeaders = (): Record<string, string> => {
+  const token = localStorage.getItem("token");
+  return token ? { Authorization: `Bearer ${token}` } : {};
+};
